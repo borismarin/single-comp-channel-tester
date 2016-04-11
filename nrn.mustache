@@ -1,0 +1,102 @@
+#!/usr/bin/ipython -i
+
+from neuron import *
+from nrn import *
+
+def create_comp(name='soma'):
+    comp = h.Section(name)
+
+    comp.nseg = {{geometry.nseg}}
+    comp.L = {{geometry.L}}
+    comp.diam = {{geometry.diam}}
+
+    {{#mechanisms}}
+    comp.insert('{{name}}')
+    {{#gbar.name}}
+    comp.{{gbar.name}} = {{gbar.val}}
+    {{/gbar.name}}
+    {{^gbar.name}}
+    comp.gbar_{{name}} = {{gbar}}
+    {{/gbar.name}}
+    {{#ion}}
+    comp.e{{ion}} = {{rev}}
+    {{/ion}}
+    {{^ion}}
+    comp.e{{name}} = {{rev}}
+    {{/ion}}
+
+    {{/mechanisms}}
+    {{#passive}}
+    comp.insert('{{name}}')
+    comp.g{{ion}} = {{g}}
+    comp.e{{ion}} = {{rev}}
+    {{/passive}}
+
+
+    {{#reversals}}
+    {{/reversals}}
+
+    return comp
+
+
+def plot_timeseries(vdict, varlist):
+    from pylab import plot, show, figure, title
+    t = vdict['t']
+    for n in varlist:
+        figure()
+        plot(t, vdict[n], label=n)
+        title(n)
+
+    show()
+
+def create_dumps(section, varlist):
+    recordings = {n: h.Vector() for n in varlist}
+
+    for (vn, v) in recordings.iteritems():
+        v.record(section(0.5).__getattribute__('_ref_' + vn))
+
+    recordings['t'] = h.Vector()
+    recordings['t'].record(h._ref_t)
+    return recordings
+
+
+def dump_to_file(vdict, varlist, fname='/tmp/sccct.nrn.dat'):
+    from numpy import savetxt, array
+
+    vnames = ['t'] + varlist
+    X = array([vdict[x].to_python() for x in vnames]).T
+    savetxt(fname, X)
+
+
+def run(tstop=10, dt=0.001):
+    h.dt = dt
+    h.finitialize({{v0}})
+    h.fcurrent()
+    h.frecord_init()
+    while h.t < tstop:
+        h.fadvance()
+
+comp = create_comp('soma')
+h.celsius = {{run.temp}}
+
+inputs = []
+
+{{#inputs}}
+stim = h.IClamp(0.5, sec=comp)
+stim.delay = {{delay}}
+stim.dur = {{dur}}
+stim.amp = {{amp}}
+inputs.append(stim)
+
+{{/inputs}}
+
+
+varlist = {{record}}
+ds = create_dumps(comp, varlist)
+
+run({{run.total}}, {{run.dt}})
+
+{{#plot}}
+plot_timeseries(ds, varlist)
+{{/plot}}
+dump_to_file(ds, varlist)
