@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <neuroml xmlns="http://www.neuroml.org/schema/neuroml2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.neuroml.org/schema/neuroml2  https://raw.github.com/NeuroML/NeuroML2/development/Schemas/NeuroML2/NeuroML_v2beta3.xsd" id="net">
-  {{#mechanisms}}
+  {{#nml_mechanisms}}
   <include href="{{name}}.channel.nml"/>
-  {{/mechanisms}}
+  {{/nml_mechanisms}}
   {{#passive}}
   <include href="{{name}}.channel.nml"/>
   {{/passive}}
@@ -11,7 +11,6 @@
   {{#inputs}}
   <pulseGenerator id="{{id}}" delay="{{delay}} ms" duration="{{dur}} ms" amplitude="{{amp}} uA"/>
   {{/inputs}}
-
 
   <network id="net" type="networkWithTemperature" temperature="{{run.temp}} degC">
 
@@ -22,8 +21,8 @@
     </population>
 
     {{#inputs}}
-    <inputList id="{{id}}" component="{{id}}" population="pop">
-      <input id="{{id}}" target="../pop/0/cell" destination="synapses"/>
+    <inputList id="Clamps" component="{{id}}" population="pop">
+      <input id="{{input_id}}" target="../pop/0/cell" destination="synapses"/>
     </inputList>
     {{/inputs}}
 

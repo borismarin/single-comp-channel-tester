@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<neuroml xmlns="http://www.neuroml.org/schema/neuroml2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.neuroml.org/schema/neuroml2 https://raw.github.com/NeuroML/NeuroML2/development/Schemas/NeuroML2/NeuroML_v2beta4.xsd" id="Golgi_KC">
+
+    <notes>ChannelML file containing a single Channel description from Saraga et al 2003</notes>
+
+    <ionChannel id="Ksoma" conductance="319pS" type="ionChannelHH" species="k">
+        
+        <gateHHrates id="n" instances="4">
+            <q10Settings type="q10ExpTemp" q10Factor="3" experimentalTemp="24 degC"/>
+            <forwardRate type="HHExpLinearRate" rate="0.45per_ms" midpoint="25mV" scale="25mV"/>
+            <reverseRate type="HHExpLinearRate" rate="0.0432per_ms" midpoint="35mV" scale="-12mV"/>
+        </gateHHrates>
+                            
+    </ionChannel>
+    
+    <!--  Original NEURON version:
+    <ComponentType name="Saraga2003_INa_rate"
+                   extends="baseHHRate"
+                   description="conditional ExpLinearRate to describe INa in Saraga 2003">
+
+        <Dynamics>         
+            <DerivedVariable name="tmp" value="(v - midpoint)/scale" dimension="none"/>
+            
+            <ConditionalDerivedVariable name="exp_tmp" dimension="none">
+                <Case condition="-tmp .lt. -100" value="0"/>
+                <Case condition="-tmp .geq. -100" value="exp(-tmp)"/>
+            </ConditionalDerivedVariable>
+
+            <ConditionalDerivedVariable name="r" exposure="r" dimension="per_time">
+                <Case condition="abs(tmp) .lt. 1e-6" value="scale * (1 + tmp/2)"/>
+                <Case condition="abs(tmp) .geq. 1e-6" value="(rate * tmp) / (1 - exp_tmp )"/>
+            </ConditionalDerivedVariable>
+        </Dynamics>
+
+    </ComponentType>
+    -->
+
+</neuroml>

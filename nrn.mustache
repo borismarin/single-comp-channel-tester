@@ -10,7 +10,7 @@ def create_comp(name='soma'):
     comp.L = {{geometry.L}}
     comp.diam = {{geometry.diam}}
 
-    {{#mechanisms}}
+    {{#mod_mechanisms}}
     comp.insert('{{name}}')
     {{#gbar.name}}
     comp.{{gbar.name}} = {{gbar.val}}
@@ -24,14 +24,29 @@ def create_comp(name='soma'):
     {{^ion}}
     comp.e{{name}} = {{rev}}
     {{/ion}}
+    {{/mod_mechanisms}}
 
-    {{/mechanisms}}
+    {{#nml_mechanisms}}
+    comp.insert('{{name}}')
+    {{#gbar.name}}
+    comp.{{gbar.name}} = {{gbar.val}}
+    {{/gbar.name}}
+    {{^gbar.name}}
+    comp.gbar_{{name}} = {{gbar}}
+    {{/gbar.name}}
+    {{#ion}}
+    comp.e{{ion}} = {{rev}}
+    {{/ion}}
+    {{^ion}}
+    comp.e{{name}} = {{rev}}
+    {{/ion}}
+    {{/nml_mechanisms}}
+
     {{#passive}}
     comp.insert('{{name}}')
     comp.g{{ion}} = {{g}}
     comp.e{{ion}} = {{rev}}
     {{/passive}}
-
 
     {{#reversals}}
     {{/reversals}}
@@ -49,6 +64,7 @@ def plot_timeseries(vdict, varlist):
 
     show()
 
+
 def create_dumps(section, varlist):
     recordings = {n: h.Vector() for n in varlist}
 
@@ -60,7 +76,7 @@ def create_dumps(section, varlist):
     return recordings
 
 
-def dump_to_file(vdict, varlist, fname='/tmp/sccct.nrn.dat'):
+def dump_to_file(vdict, varlist, fname='sccct.nrn.dat'):
     from numpy import savetxt, array
 
     vnames = ['t'] + varlist
@@ -70,7 +86,7 @@ def dump_to_file(vdict, varlist, fname='/tmp/sccct.nrn.dat'):
 
 def run(tstop=10, dt=0.001):
     h.dt = dt
-    h.finitialize({{v0}})
+    h.finitialize({{run.v0}})
     h.fcurrent()
     h.frecord_init()
     while h.t < tstop:

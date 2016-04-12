@@ -67,13 +67,13 @@ def main(nml):
         with open("sccct_generated.nrn.py", "w") as outf:
             outf.write(pystache.Renderer().render_path('nrn.mustache', conf))
 
-        compile_channel_files()
+        # compile_channel_files()
 
 
 
 if __name__ == '__main__':
 
-    nml = True  # set True to work with .channel.nml files instead of comparing only .mod files
+    nml = False  # set True to work with .channel.nml files instead of comparing only .mod files
 
     main(nml=nml)
 
