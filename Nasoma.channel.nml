@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<neuroml xmlns="http://www.neuroml.org/schema/neuroml2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.neuroml.org/schema/neuroml2 https://raw.github.com/NeuroML/NeuroML2/development/Schemas/NeuroML2/NeuroML_v2beta4.xsd" id="Golgi_KC">
+
+    <notes>ChannelML file containing a single Channel description from Saraga et al 2003</notes>
+
+    <ionChannel id="Nasoma" conductance="107pS" type="ionChannelHH" species="na">
+        
+        <gateHHratesInstantaneous id="m" instances="3">
+            <q10Settings type="q10ExpTemp" q10Factor="3" experimentalTemp="24 degC"/>
+            <forwardRate type="HHExpLinearRate" rate="1per_ms" midpoint="-38mV" scale="10mV"/>
+            <reverseRate type="HHExpRate" rate="4per_ms" midpoint="-63mV" scale="-18mV"/>  <!-- article: midpoint: -65mV-->
+        </gateHHratesInstantaneous>
+    
+        <gateHHrates id="h" instances="1">
+            <q10Settings type="q10ExpTemp" q10Factor="3" experimentalTemp="24 degC"/>
+            <forwardRate type="HHExpRate" rate="0.07per_ms" midpoint="-63mV" scale="-20mV"/>
+            <reverseRate type="HHSigmoidRate" rate="1per_ms" midpoint="-33mV" scale="10mV"/>
+        </gateHHrates>
+                            
+    </ionChannel>
+    
+    
+    <ComponentType name="gateHHratesInstantaneous"
+                   extends="gateHHrates"
+                   description="Gate which follows the general Hodgkin Huxley formalism, except for tau = 0">
+
+        <Child name="notes" type="notes"/>
+
+        <Child name="forwardRate" type="baseVoltageDepRate"/>
+        <Child name="reverseRate" type="baseVoltageDepRate"/>
+
+        <Constant name="SEC" dimension="time" value="1s"/>
+
+        <Exposure name="alpha" dimension="per_time"/>
+        <Exposure name="beta" dimension="per_time"/>
+
+        <Exposure name="tau" dimension="time"/>
+        <Exposure name="inf" dimension="none"/>
+        
+        <Exposure name="rateScale" dimension="none"/>
+
+        <Dynamics>
+
+            <DerivedVariable name="alpha" dimension="per_time" exposure="alpha" select="forwardRate/r"/>
+            <DerivedVariable name="beta" dimension="per_time" exposure="beta" select="reverseRate/r"/>
+
+            <DerivedVariable name="inf" dimension="none" exposure="inf" value="alpha/(alpha+beta)"/>
+
+            <DerivedVariable name="tau" dimension="time" exposure="tau" value="0 * SEC"/>
+
+            <DerivedVariable name="q"  exposure="q" dimension="none" value="inf"/>
+            
+            <DerivedVariable name="rateScale" exposure="rateScale" dimension="none" value="1"/>
+
+            <DerivedVariable name="fcond" exposure="fcond" dimension="none" value="q^instances"/>
+
+        </Dynamics>
+        
+    </ComponentType>
+    
+    <!--  Original NEURON version:
+    <ComponentType name="Saraga2003_INa_rate"
+                   extends="baseHHRate"
+                   description="conditional ExpLinearRate to describe INa in Saraga 2003">
+
+        <Dynamics>         
+            <DerivedVariable name="tmp" value="(v - midpoint)/scale" dimension="none"/>
+            
+            <ConditionalDerivedVariable name="exp_tmp" dimension="none">
+                <Case condition="-tmp .lt. -100" value="0"/>
+                <Case condition="-tmp .geq. -100" value="exp(-tmp)"/>
+            </ConditionalDerivedVariable>
+
+            <ConditionalDerivedVariable name="r" exposure="r" dimension="per_time">
+                <Case condition="abs(tmp) .lt. 1e-6" value="scale * (1 + tmp/2)"/>
+                <Case condition="abs(tmp) .geq. 1e-6" value="(rate * tmp) / (1 - exp_tmp )"/>
+            </ConditionalDerivedVariable>
+        </Dynamics>
+
+    </ComponentType>
+    -->
+    
+</neuroml>

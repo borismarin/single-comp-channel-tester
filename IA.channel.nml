@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<neuroml xmlns="http://www.neuroml.org/schema/neuroml2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.neuroml.org/schema/neuroml2 https://raw.github.com/NeuroML/NeuroML2/development/Schemas/NeuroML2/NeuroML_v2beta4.xsd" id="Golgi_KC">
+
+    <notes>ChannelML file containing a single Channel description from Saraga et al 2003</notes>
+
+    <ionChannel id="IA" conductance="165pS" type="ionChannelHH" species="k">
+        
+        <gateHHtauInf id="a" instances="1">
+            <q10Settings type="q10ExpTemp" q10Factor="3" experimentalTemp="24 degC"/>
+            <timeCourse type="fixedTimeCourse" tau="5ms"/>
+            <steadyState type="HHSigmoidVariable" rate="1" midpoint="-14mV" scale="16.6mV"/>
+        </gateHHtauInf>
+    
+        <gateHHtauInf id="b" instances="1">
+            <q10Settings type="q10ExpTemp" q10Factor="3" experimentalTemp="24 degC"/>
+            <timeCourse type="Saraga2003_IA_tau" />
+            <steadyState type="HHSigmoidVariable" rate="1" midpoint="-71mV" scale="-7.3mV"/>
+        </gateHHtauInf>
+                            
+    </ionChannel>
+    
+    <ComponentType name="Saraga2003_IA_tau"
+                   extends="baseVoltageDepTime"
+                   description="Tau parameter to describe IA in Saraga 2003">
+        
+        <Constant name="TIME_SCALE" dimension="time" value="1 ms"/>
+        <Constant name="VOLT_SCALE" dimension="voltage" value="1 mV"/>
+
+        <Dynamics>
+            <DerivedVariable name="V" dimension="none" value="v / VOLT_SCALE"/>
+            <DerivedVariable name="alpha_b" dimension="per_time" value="(0.000009 / (exp((V - 26)/18.5))) / TIME_SCALE"/>
+            <DerivedVariable name="beta_b" dimension="per_time" value="(0.014 / (0.2 + exp(-(V + 70)/11))) / TIME_SCALE"/>
+            <DerivedVariable name="t" exposure="t" dimension="time" value="1/(alpha_b + beta_b)"/>
+        </Dynamics>
+
+    </ComponentType>
+
+</neuroml>

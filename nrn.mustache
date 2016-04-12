@@ -53,16 +53,34 @@ def create_comp(name='soma'):
 
     return comp
 
+def get_next_hex_color():
+    from random import randint
+    
+    return "#%06x" %randint(0,0xFFFFFF)
+
 
 def plot_timeseries(vdict, varlist):
-    from pylab import plot, show, figure, title
+    import matplotlib.pyplot as plt
     t = vdict['t']
-    for n in varlist:
-        figure()
-        plot(t, vdict[n], label=n)
-        title(n)
+    v = vdict['v']
+    
+    fig = plt.figure(figsize=(10, 12))
 
-    show()
+    ax = fig.add_subplot(2, 1, 1)
+    ax.plot(t, v, 'k-', linewidth=2)
+    ax.set_title('membrane potential')
+    ax.set_xlim([0, {{run.total}}])
+
+    ax2 = fig.add_subplot(2, 1, 2)
+    for n in range(1, len(varlist)):
+        ax2.plot(t, vdict[varlist[n]], label=varlist[n], color=get_next_hex_color(), linewidth=2)
+    ax2.set_title('recorded gating variables')
+    ax2.set_xlim([0, {{run.total}}])
+    ax2.set_xlabel('Time [ms]')
+    ax2.set_ylim([0, 1])
+    ax2.legend()
+
+    plt.show()
 
 
 def create_dumps(section, varlist):

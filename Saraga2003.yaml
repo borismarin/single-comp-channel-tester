@@ -1,0 +1,86 @@
+mod_mechanisms:
+  - name: Nasoma_original
+    gbar: 
+        name: gnasoma_Nasoma_original
+        val: 0.0107
+    rev: 90
+    ion: na
+
+  - name: Ksoma_original
+    gbar: 
+        name: gksoma_Ksoma_original
+        val: 0.0319
+    rev: -100
+    ion: k
+
+  - name: IA_original
+    gbar: 
+        name: gkAbar_IA_original
+        val: 0.0165
+    rev: -100
+    ion: k
+
+  - name: Ih_original
+    gbar: 
+        name: gkhbar_Ih_original
+        val: 0.001358
+    rev: -32.9
+    ion: h
+
+nml_mechanisms:
+  - name: Nasoma
+    gbar: 
+        name: gmax_Nasoma
+        val: 0.0107
+    rev: 90
+    ion: na
+
+  - name: Ksoma
+    gbar: 
+        name: gmax_Ksoma
+        val: 0.0319
+    rev: -100
+    ion: k
+
+  - name: IA
+    gbar: 
+        name: gmax_IA
+        val: 0.0165
+    rev: -100
+    ion: k
+
+  - name: Ih
+    gbar: 
+        name: gmax_Ih
+        val: 0.001358
+    rev: -32.9
+    ion: h
+
+inputs:
+  - delay: 100
+    dur: 100
+    amp: -2e-5
+    id: iclamp0
+    input_id: 0  # non negative integer (just for LEMS)
+  - delay: 200
+    dur: 200
+    amp: 2e-5
+    id: iclamp1
+    input_id: 1  # non negative integer (just for LEMS)
+
+geometry:
+    nseg: 1
+    L: 3.1831
+    diam: 10
+    Ra: 150
+    C: 1.3
+
+run:
+    total: 500
+    dt: 0.001
+    v0: -70.
+    temp: 24
+
+record: ['v', 'h_Nasoma_original', 'h_q_Nasoma', 'n_Ksoma_original', 'n_q_Ksoma', 'a_IA_original', 'b_IA_original', 'a_q_IA', 'b_q_IA', 'r_Ih_original', 'r_q_Ih']  # v should be the first recorded variable
+
+plot: true

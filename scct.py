@@ -21,7 +21,6 @@ def command_line(cmd):
     p = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
     [out, err] = p.communicate()
     print out
-    print err
 
 
 def compile_channel_files():
@@ -33,12 +32,12 @@ def compile_channel_files():
     command_line(cmd)
 
 
-def main(nml):
+def main(nml, nrn_file):
 
     try:
         input_file = sys.argv[1]
     except:
-        input_file = 'conf.yaml'
+        input_file = 'Saraga2003.yaml'
 
     with open(input_file) as inpf:
 
@@ -47,24 +46,23 @@ def main(nml):
 
         if nml:
 
-            with open("sccct_generated.cell.nml", "w") as outf:
+            with open(".sccct_generated.cell.nml", "w") as outf:
                 outf.write(pystache.Renderer().render_path('nml.cell.mustache', conf))
 
-            with open("sccct_generated.net.nml", "w") as outf:
+            with open(".sccct_generated.net.nml", "w") as outf:
                 outf.write(pystache.Renderer().render_path('nml.net.mustache', conf))
 
             from neuroml.utils import validate_neuroml2
-            validate_neuroml2("sccct_generated.cell.nml")
-            validate_neuroml2("sccct_generated.net.nml")
+            validate_neuroml2(".sccct_generated.cell.nml")
+            validate_neuroml2(".sccct_generated.net.nml")
 
-            lems_file = "sccct_generated_LEMS.xml"
-            
+            lems_file = "LEMS_sccct_generated.xml"        
             with open(lems_file, "w") as outf:
                 outf.write(pystache.Renderer().render_path('lems.xml.mustache', conf))
         
             convert_channels_to_mod(lems_file)
-
-        with open("sccct_generated.nrn.py", "w") as outf:
+   
+        with open(nrn_file, "w") as outf:
             outf.write(pystache.Renderer().render_path('nrn.mustache', conf))
 
         compile_channel_files()
@@ -74,8 +72,12 @@ def main(nml):
 if __name__ == '__main__':
 
     nml = True  # set True to work with .channel.nml files instead of comparing only .mod files
+    nrn_file = "compare_modfiles.nrn.py"
 
-    main(nml=nml)
+    main(nml, nrn_file)
+
+    cmd = ["nrngui", nrn_file]
+    command_line(cmd)
 
     
 
