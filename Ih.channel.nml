@@ -6,7 +6,6 @@
     <ionChannel id="Ih" conductance="13.85pS" type="ionChannelHH" species="non_specific">
         
         <gateHHtauInf id="r" instances="1">
-            <q10Settings type="q10ExpTemp" q10Factor="3" experimentalTemp="24 degC"/>
             <timeCourse type="Saraga2003_Ih_tau"/>
             <steadyState type="HHSigmoidVariable" rate="1" midpoint="-0.0841V" scale="-0.0102V"/>
         </gateHHtauInf>

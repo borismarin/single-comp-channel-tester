@@ -6,7 +6,6 @@
     <ionChannel id="Nasoma" conductance="107pS" type="ionChannelHH" species="na">
         
         <gateHHratesInstantaneous id="m" instances="3">
-            <q10Settings type="q10ExpTemp" q10Factor="3" experimentalTemp="24 degC"/>
             <forwardRate type="HHExpLinearRate" rate="1per_ms" midpoint="-38mV" scale="10mV"/>
             <reverseRate type="HHExpRate" rate="4per_ms" midpoint="-63mV" scale="-18mV"/>  <!-- article: midpoint: -65mV-->
         </gateHHratesInstantaneous>
