@@ -46,7 +46,7 @@
                 <channelDensity condDensity="{{#gbar.name}}{{gbar.val}}{{/gbar.name}}{{^gbar}}0{{/gbar}} S_per_cm2" id="{{name}}_all" ionChannel="{{name}}" ion="{{ion}}{{^ion}}{{name}}{{/ion}}" erev="{{rev}} mV"/>
                 {{/nml_mechanisms}}
                 {{#passive}}
-                <channelDensity condDensity="{{g}} s_per_cm2" id="{{name}}_all" ionChannel="{{name}}" ion="{{ion}}" erev="{{rev}} mV"/>
+                <channelDensity condDensity="{{g}} S_per_cm2" id="{{name}}_all" ionChannel="{{name}}" ion="{{ion}}" erev="{{rev}} mV"/>
                 {{/passive}}
                 <spikeThresh value="0 mV"/>
                 <specificCapacitance value="{{geometry.C}} uF_per_cm2"/>

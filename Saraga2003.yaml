@@ -56,6 +56,12 @@ nml_mechanisms:
     rev: -32.9
     ion: h
 
+passive:
+  name: pas
+  g: 5e-05
+  rev: -75
+  ion: '_pas'
+
 inputs:
   - delay: 100
     dur: 100

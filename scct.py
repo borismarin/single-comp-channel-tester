@@ -5,7 +5,7 @@ from subprocess import Popen, PIPE
 
 def preprocess(conf):
 
-    conf["resistivity"] = 1.0/conf.get("passive", {'g':1})['g']
+    conf["resistivity"] = 1.0/float(conf.get("passive", {'g':1})['g'])
 
     return conf
 
